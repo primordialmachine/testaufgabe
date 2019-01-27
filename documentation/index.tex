@@ -1,0 +1,157 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% Primordial Machine's Math Colors Library
+% Copyright (C) 2017-2019 Michael Heilmann
+%
+% This software is provided 'as-is', without any express or implied warranty.
+% In no event will the authors be held liable for any damages arising from the
+% use of this software.
+%
+% Permission is granted to anyone to use this software for any purpose,
+% including commercial applications, and to alter it and redistribute it
+% freely, subject to the following restrictions:
+%
+% 1. The origin of this software must not be misrepresented;
+%    you must not claim that you wrote the original software.
+%    If you use this software in a product, an acknowledgment
+%    in the product documentation would be appreciated but is not required.
+%
+% 2. Altered source versions must be plainly marked as such,
+%    and must not be misrepresented as being the original software.
+%
+% 3. This notice may not be removed or altered from any source distribution.
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\documentclass[oneside]{book}
+
+\input{common}
+\input{meta}
+
+\SetLibraryIncludeFileName{include.hpp}
+\SetLibraryIncludesDirectoryPath{primordialmachine/math-colors/\newline\$(PlatformTarget.toLower())/\$(Configuration.toLower())/includes}
+
+\SetLibraryIncludeDirectiveFilePath{primordialmachine/math/colors/include.hpp}
+
+\SetLibraryStaticLibrariesDirectoryPath{primordialmachine/math/colors/\newline\$(PlatformTarget.toLower())/\$(Configuration.toLower())/libraries}
+\SetLibraryStaticLibraryFileName{math-colors.lib}
+
+\SetDocumentType{User Manual}
+
+\begin{document}
+
+\frontmatter
+
+\begin{titlepage}
+\maketitle
+\end{titlepage}
+
+\tableofcontents
+\addtocontents{toc}{\protect\thispagestyle{empty}}
+\pagenumbering{gobble}
+
+\mainmatter
+
+\chapter{Synopsis}
+C++ 17 library providing colors.
+The library is made available publicly on
+\href{\GetLibraryRepository}{Github}
+under the
+\href{\GetLibraryRepository/blob/master/LICENSE}{MIT License}.
+
+\chapter{Limitations and Restrictions}
+The library officially only supports Visual Studio 2017 and Windows 10.
+
+\chapter{Introductory example}
+\textit{\color{orange}This library does not provide any examples yet.}
+%Examples are located in the \href{\GetLibraryRepository/blob/master/examples}{examples} directory.
+
+\input{building_visual_studio_2017}
+
+\chapter{Library Interface Documentation}
+
+\section{\texttt{namespace primordialmachine}}
+The namespace this library is adding its declarations/definitions to.
+The added namespace elements are documented below.
+
+\subsection{\texttt{saturated} (\texttt{struct})}
+
+\input{Isa}
+
+\subsection{Color space types}
+The library provides \texttt{struct} types each one denoting a color space.
+Table \ref{table:color-space-types} denotes the type in the left column and the color space the type is denoting in the right column.
+
+    \newcolumntype{L}{>{\raggedright\arraybackslash}X}
+
+\begin{table}[h]
+\begin{tabularx}{\textwidth}{|>{\hsize=0.175\hsize}L|>{\hsize=0.825\hsize}L|}
+\hline
+\texttt{color\_space\_rgb}  & RGB color space with three components for red, green, and blue.\\
+\hline
+\texttt{color\_space\_rgba} & RGBA color space with four components for red, green, blue, and alpha.\\
+\hline
+\texttt{color\_space\_l}    & L color space with one component for luminance.\\
+\hline
+\texttt{color\_space\_la}   & LA color space with two components for luminance and alpha.\\
+\hline
+\texttt{color\_space\_hsv}  & HSV color space with three components for hue, saturation, and value.\\
+\hline
+\texttt{color\_space\_hsva} & HSVA color space with four components for hue, saturation, value, and alpha.\\
+\hline
+\texttt{color\_space\_hsl}  & HSL color space with three components for hue, saturation, and lightness.\\
+\hline
+\texttt{color\_space\_hsla} & HSLA color space with four components for hue, saturation, lightness, and alpha.\\
+\hline
+\end{tabularx}
+\caption{Color space types.}
+\label{table:color-space-types}
+\end{table}
+\Isa{color\_space}
+
+\subsubsection{Component arithmetic types}
+The library provides \texttt{struct} types each one denoting a component arithmetic.
+Table \ref{table:component-arithmetic-types} denotes the type in the left column and the component arithmetic the type is denoting in the right column.
+
+\begin{table}[h]
+\begin{tabularx}{\textwidth}{|>{\hsize=0.325\hsize}L|>{\hsize=0.675\hsize}L|}
+\hline
+\texttt{component\_arithmetic\_saturated} & Saturated component arithmetic.\newline An alias of \texttt{component\_arithmetic\_clamped}.\\
+\hline
+\texttt{component\_arithmetic\_clamped}   & Clamped component arithmetic. \newline An alias of \texttt{component\_arithmetic\_saturated}.\\
+\hline
+\end{tabularx}
+\caption{Component arithmetic types.}
+\label{table:component-arithmetic-types}
+\end{table}
+\Isa{component\_arithmetic}
+
+\subsection{\texttt{color} (struct type)}
+A \texttt{struct} template struct with four template parameters \texttt{COMPONENT},
+\texttt{COMPONENT\_ARITHMETIC}, \texttt{COLOR\_SPACE}, and \texttt{ENABLED}. The
+default value is \texttt{void}. Speializations of this template may use \texttt{ENABLED}
+to perform SFINAE.\newline
+
+A possible implementation is given by\newline
+\texttt{template\textlangle typename COMPONENT, typename COMPONENT\_ARITHMETIC, typename COLOR\_SPACE\textrangle\newline
+struct color;}\newline
+
+\Isa{color}
+
+\begin{table}[h]
+\begin{tabularx}{\textwidth}{|>{\hsize=0.22\hsize}L|>{\hsize=0.34\hsize}L|>{\hsize=0.44\hsize}L|}
+\hline
+\texttt{COMPONENT}                                           & \texttt{COMPONENT\_ARITHMETIC}                                                          & \texttt{COLOR\_SPACE}\\
+\hline
+\texttt{T} with \texttt{true == is\_floating\_point\_v{T}}   & \texttt{component\_arithmetic\_saturated}/\newline\texttt{component\_arithmetic\_clamped}& \texttt{color\_space\_rgb}\\
+\hline
+\texttt{T} with \texttt{true == is\_floating\_point\_v{T}}   & \texttt{component\_arithmetic\_saturated}/\newline\texttt{component\_arithmetic\_clamped}& \texttt{color\_space\_rgba}\\
+\hline
+\end{tabularx}
+\caption{Available specializations of \texttt{color}.}
+\label{table:specializations-of-color}
+\end{table}
+\Isa{component\_arithmetic}
+
+
+\end{document}
