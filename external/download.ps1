@@ -31,7 +31,6 @@ Download -PackageName 'byte-orders' -Version '1.5'
 Download -PackageName 'relational-functors' -Version '1.8'
 Download -PackageName 'one-zero-functors' -Version '1.5'
 # Less stable packages.
-Download -PackageName 'math-indices' -Version '1.2'
 Download -PackageName 'math-scalars' -Version '1.4'
-Download -PackageName 'math-non-scalars' -Version '1.1'
+Download -PackageName 'math-non-scalars' -Version '1.2'
 Download -PackageName 'functors' -Version '1.3'
